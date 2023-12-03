@@ -1,0 +1,421 @@
+\documentclass{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{setspace} \doublespacing
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\pgfplotsset{width=8cm,compat=1.9}
+ 
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\begin{document}
+
+\title{Theory of Investment Finance Portfolio} 
+\author{Aryan Arora, Yuv Kataria, Tsion Kirtner, Aarnie Dushime}
+\date{March 8, 2022}
+
+\maketitle
+
+\section{Introductory Notes:}
+
+Our complete portfolio contains 4 equities, 1 bond fund, and 1 risk-free money market asset. Included are: T-bills, the RBC BlueBay High Yield Bond Fund, Lyondell Basell Industries, Nvidia, Broadcom Incorporated, and Cheniere Energy Incorporated. Our portfolio has the following portfolio statistics: 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllllll}
+           & Beta & E(r)    & St. Dev & Sharpe Ratio  \\
+Portfolio: & 2.12 & 69.78\% & 17.21\% & 4.01         
+\end{tabular}
+\end{table}
+
+Our main goal of this portfolio is to maximise our Sharpe Ratio, which comes out to be 4.01 as seen above, by including assets with a higher Sharpe Ratios than the market SR of 0.95. Our portfolio offers extremely strong returns (69.78\%) which is roughly 7 times what the market offers, but also has a large Standard Deviation (17.28\%). These contribute to our strong Sharpe Ratio.
+
+\section{Methods:}
+
+The aim of our portfolio is to maximize the Sharpe Ratio (SR). 
+
+\begin{center}
+    \begin{math}
+        SR = \frac{E[r_{a}]-r_f}{\sigma_{a}}
+    \end{math}
+\end{center}
+
+where $E[r_{a}]$ is the returns of asset a, $r_f$ is the risk free return, and $\sigma_{a}$ is the standard deviation of asset a's returns. The Sharpe Ratio is a measure of the risk-reward ratio of an asset: for a given level of risk ($\sigma_{a}$), what is the expected excess return over the market $E[R_{a}-R_{rf}]$ an investor can expect? This why we have chosen to evaluate our portfolio using the Sharpe ratio: we are not averse to taking on greater risk so long as the investor is well compensated for that additional risk. Given that the market Sharpe ratio is roughly 1, we looked for Sharpe ratios larger than that because if we cannot deliver a better Sharpe ratio than the market, any investor is better off investing into the market bundle index (like the S\&P 500 ETF). 
+
+Despite not including it in our portfolio, we used the SPY ETF to determine E(r) of the market. We began by choosing to use a market-weighted index instead of a price-weighted index because we believe that it better represents the market — where every company is not weighted equally. From there, we were most familiar with the S\&P 500 index, and chose the SPY ETF stochastically out of all the ETF's that mirror the S\&P 500 index. We found an expected return of 10.6\% for the SPY ETF and a Sharpe Ratio of 0.95\footnote{It should be noted that during the course of this project, the tailing 12 month return of the SPY has been as high as 35\% and was roughly 26\% but the SPY has fallen almost 7\% just since we began the project. Because of this volatility, we are using the data from Yahoo finance instead of recalculating this value every week.}.This means that the SPY ETF has a standard deviation of 10.25\% (Appendix 6.2). That information can be found at \url{https://finance.yahoo.com/quote/SPY/risk/}.
+
+We evaluated all assets (with the exception of T-bills and the market basket\footnote{T-bills because they have a fixed value that does not change once they are purchased (they are *essentially* risk-free) and the market basket because it is the baseline we use in evaluating the assets}) using the following method. First we took the weekly adjusted closing price (adjusted in order to account for dividend payments) for each week of the year prior to the date of evaluation and then did the same for the year prior to that. For instance, the closing price of an asset at the end of the first week in March in 2020 and 2021. We then evaluated the one year returns of the asset for each week (1st week march 2020 to 1st week march 2021, 2nd week march 2020 to 2nd week march 2021) using the following method:
+
+\begin{center}
+    \begin{math}
+        1 year Returns = \frac{P_{f}-P{i}}{P{i}} -1
+    \end{math}
+\end{center}
+
+\noindent Where $P_{f}$ was final price (e.g. 1st week March 2021) and $P_{i}$ was initial price (e.g. 1st week March 2020). We then took the same 1 year returns of the market index (SPY) and conducted the following calculation:
+
+\begin{center}
+\begin{math}
+    \beta = \frac{Asset Returns}{Market Returns}
+\end{math}
+\end{center}
+
+We averaged the $\beta$ values to get the average $\beta$ for the asset, the 1 year (rolling 12 month) returns of the asset to get the 1 year E(r), and used the standard deviation function to get the $\sigma$ of its E(r). Using the E(r) we calculated, we found the $\sigma$ of the returns, and a risk free rate from the 1 year t-bill, we calculated a Sharpe ratio for each asset.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllllll}
+Asset:        & T-Bill & LYB  & RHYAX & AVGO & NVDA & LNG  \\
+Sharpe Ratio: & 0      & 1.20 & 1.39  & 2.23 & 3.71 & 4.64
+\end{tabular}
+\end{table}
+
+Next we plotted the Sharpe Ratio versus the $\beta$ of each asset (Appendix 6.1). Since our portfolio goal was to maximize Sharpe ratio, we placed heavier weights on the assets with higher Sharpe Ratios. But for the assets which offered lower Sharpe Ratios, we also considered their $\beta$'s. We understand that a Sharpe Ratio means that investors are offered a higher return at any level of risk, but with assets which had considerably lower Sharpe Ratios (and thus any weight we put on them would lower the portfolio Sharpe Ratio), we needed a metric to determine where to assign larger weights. For instance we saw that LYB and RHYAX offered similar Sharpe Ratios, yet LYB offered a significantly lower $\beta$(this can be seen on the graph when comparing the purple and yellow points). Considering that our portfolio already contained a considerably high beta, we decided to place a larger weight into LYB. We also understand that a portfolio's volatility is its $\sigma$ and that $\beta$ is only one part of that—but without measuring the co-variance of each asset with all other assets, we couldn't adequately understand which assets would increase and decrease the portfolio $\sigma$, thus we focused on $\beta$. We placed the following weights on each asset:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllllll}
+Assets: & T-Bill & LYB & RHYAX & AVGO & NVDA & LNG  \\
+Weight: & 5\%   & 10\% & 5\%   & 20\% & 30\% & 30\%
+\end{tabular}
+\end{table}
+
+We generated our portfolio E(r) by taking a weighted average of each assets' expected returns. In order to generate the standard deviation, we first took each assets weekly (rolling 12 month) returns. We then took a weighted sum $\sum (w_{asset} \times E(r)_{asset}$) of their weekly returns. This gave us historic weekly returns of the portfolio. Using the standard deviation formula in excel, we were able to calculate portfolio standard deviation ($\sigma$). We calculated Share Ratio as follows:
+
+\begin{center}
+    \begin{math}
+        SR = \frac{E[r_{portfolio}]-r_f}{\sigma_{portfolio}}
+    \end{math}
+\end{center}
+
+
+\maketitle
+\section{Assets:}
+
+\maketitle
+\subsection{T-bills:}
+
+T-bills are the risk-free asset we chose to use. The 1-year T-bill rate as of our date of purchase (February 4th, 2022) is 0.86\%. This is the value we will use for the risk-free rate when evaluating our other assets. There is no $\sigma$ or $\beta$ for T-bills since their yield is locked upon purchase and does not fluctuate as a result of systematic or non-systematic risk. The data we used to find this T-bill rate can be found at \url{https://ycharts.com/indicators/1_year_treasury_rate}
+
+\begin{center}
+    \begin{math}
+        \beta_{t-bill} = 0, \sigma_{t-bill} = 0, E(r_{t-bill}) = 0.86\%
+    \end{math}    
+\end{center}
+
+We chose to include T-bills because an efficient portfolio has both risky and risk-free assets in order to hedge market risk.  All other assets fluctuate with the market, and a risk-free asset will reduce our portfolio exposure to market risk.  We chose T-bills because they are the most liquid and easy to track. It is particularly important to include T-bills in a portfolio like ours which seeks out assets with large E(r) and Sharpe Ratios which are typically accompanied by high levels of volatility. 
+
+\subsection{RBC BlueBay High Yield Bond Fund}
+
+The RBC BlueBay High Yield Bond Fund (RHYAX) is a bond fund. It invests at least 80\% of its assets in fixed income securities and/or investments that provide exposure to fixed income securities that are non-investment grade (high yield). High yield bonds are known to focus on lower quality bonds that are risky. Because they are risky, they offer higher coupons in order to attract investors. 
+
+RHYAX has the following portfolio statistics:
+
+\begin{center}
+    \begin{math}
+        \beta_{avg} = 0.36, E(r) = 9.71\%, \sigma_{RHYAX} = 6.38\%, SR = 1.39
+    \end{math}
+\end{center}
+
+RHYAX is an interesting choice for a bond fund because it has an expected return and standard deviation that exceed most bond funds. Typically a bond fund is included in a portfolio in order to reduce volatility. RHYAX's higher standard deviation then suggests that it wouldn't serve the same function in an efficient portfolio. But given that our goal with this portfolio is to maximize Sharpe Ratio, we are comfortable with a higher standard deviations—so long as investors are well compensated for them. Furthermore, we are expecting high standard deviations, so even with a standard deviation greater than most bond funds, RHYAX is reducing the standard deviation of our complete portfolio, providing a $\beta$ which will reduce our portfolio volatility, and offering a better Sharpe ratio better than the market bundle. Including this bond is vital to making our portfolio well-balanced. 
+
+\subsection{Cheniere Energy Inc.:}
+
+Cheniere Energy is the largest natural gas operator in the USA and one of the largest natural gas companies in the world. The company has had a return of around 86\% in the last year and has demonstrated a scope for growth through investments into new facilities in Louisiana and Texas. We have chosen to include Cheniere Energy Inc. (LNG) in our portfolio because the market for liquid natural gas has been growing rapidly due to increasing demand from Asia. In the last month, the stock has grown by 12\% and we expect this company to continue growing, especially with the Russia vs Ukraine war increasing the demand for oil companies. Cheniere Inc. has the following portfolio statistics:
+
+\begin{center}
+    \begin{math}
+        \beta_{avg} = 2.61, E(r) = 84.49\%, \sigma_{LNG} = 18.03\%, SR = 4.64
+    \end{math}
+\end{center}
+
+It well fulfills our desire to create a portfolio with large Sharpe Ratio assets with a risk reward ratio over 4.5 times greater than the market. In examining the asset, we noticed both a large standard deviation of returns and an extremely large E(r). We believe that these results can be expected to continue into the next year both because there appears to be growing demand for natural gas, but also because of the momentum effect. The momentum effect is the tendency of abnormally well performing stocks and abnormally poor performing stocks to continue those performances. 
+
+\subsection{Nvidia:}
+
+Nvidia is an American multinational technology company that designs and manufactures computer graphics processors and related computing technology.  Nvidia has seen positive growth every year since 2015, and has returned around 82\% in the last twelve months.  Nvidia’s main revenue sources are its graphics (GPU chips for gaming and computers), and compute and networking (technology for vehicles and data centers).  The company plans on diving into the AI and virtual reality side of the technology market, with its introduction of the Omniverse in April 2021, and its involvement in creating the Metaverse. Therefore, we are expecting the price of the stock to continue increasing. Additionally, Nvidia offers an extremely strong positive $\alpha$ and $\beta$. Nvidia has the following portfolio statistics:
+
+\begin{center}
+    \begin{math}
+        \beta_{avg} = 2.91, E(r) = 95.18\%, \sigma_{NVDA} = 25.37\%, SR = 3.72
+    \end{math}
+\end{center}
+
+Nvidia, much like Cheniere is an extremely well performing stock that has demonstrated abnormally large returns alongside large standard deviations. Just like Cheniere it offers a strong Sharpe Ratio of 3.72, which is considerably higher than the market Sharpe Ratio of 1, and idea of the momentum effect leads us to believe that these strong positive returns will continue. 
+
+\subsection{Lyondell Basell Industries}
+
+Lyondell Basell Industries (LYB) is a multinational chemical company incorporated in the Netherlands with multiple headquarters in the US. This company is the largest licensor of polyethylene and polypropylene technologies and one of the largest plastics chemical refineries in the world. After an initial decrease in price in 2020, this company seen a positive growth, and continues to benefit from higher demand of its products as global economies reopen. With its acquisition of A. Schulman, Inc in 2021, LYB expanded the business, enabling future growth with new branches into other high growth markets such as automotive, construction material and electronic products. Starting in 2022, this company also expanded its high density polyethylene project. With these new additions and expansion, we expect the price of Lyondell Basell Industries stock to increase and offer higher rates of return. LYB has the following portfolio statistics:
+
+\begin{center}
+    \begin{math}
+        \beta_{avg} = 1.28, E(r) = 52.48\%, \sigma_{LYB} = 43.17\%, SR = 1.20
+    \end{math}
+\end{center}
+
+LYB does not offer a Sharpe Ratio nearly as strong as some of the other assets in our portfolio, but 1.28 is still higher than that of the market. It makes up for this comparatively low Sharpe with its $\beta$ being more conservative and closely related to the market than our other stocks.
+
+\subsection{AVGO Broadcom Inc.}
+AVGO Broadcom Inc. (AVGO), formerly known as Avago Technologies is an American designer, developer, manufacturer and global supplier of a wide range of semiconductor and infrastructure software products. Broadcom's product offerings serve the data center, networking, software, broadband, wireless, and storage and industrial markets. It is the worldwide provider for wireless LAN infrastructure. The company saw a significant increase in share prices (over 20\%) in the past couple months. AVGO has the following portfolio statistics:
+
+\begin{center}
+    \begin{math}
+        \beta_{avg} = 1.60, E(r) = 35.67\%, \sigma_{LYB} = 25.55\%, SR = 1.60
+    \end{math}
+\end{center}
+
+\subsection{Equity Valuation:}
+
+Since these are all high Sharpe Ratio equities, we know that they offer strong levels of reward for their levels of risk, but we can evaluate what the necessary level of reward is, and by how much they exceed that baseline using the CAPM model and equity valuation method we learned in the second half of the class.
+
+We know that the required level of return per level of risk is modeled by the CAPM equation:
+
+\begin{center}
+    \begin{math}
+        E(r) = r_f + \beta(E(r_m) - r_f)
+    \end{math}
+\end{center}
+
+Using the values we know($E(r_m)$ and $r_f$), we can calculate the required return of each asset based on their systematic risk ($\beta$). Below is the required rate of return for each asset and the expected return. 
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|}
+    \hline
+        Asset: & T-Bill & LYB & RHYAX & AVGO & NVDA & LNG \\ \hline
+        Required Return: & 0.86\% & 12.84\% & 4.20\% & 15.86\% & 28.19\% & 25.40\% \\ \hline
+        Expected Return: & 0.86\% & 52.48\% & 9.71\% & 57.71\% & 95.18\% & 84.49\% \\ \hline
+    \end{tabular}
+\end{table}
+
+As we can see all assets are expected to dramatically outperform the required rate of the return due to their market risk. The only exception is T-bills which cannot exceed their required rate of return because they have a $\beta$ of 0.
+
+\section{Changes to Portfolio throughout Project:}
+
+Our initial portfolio consisted of 3 equities, which were Alibaba, Nvidia and Cheniere, along with a Fidelity US bond fund, a put option on Moderna, and T-bills as a risk free asset. We assigned 80\% weight equally to our equities and option, and then 10\% each to the bond fund and the T-bills. We made three changes regarding the assets that we held. First, we replaced Alibaba with Lyondell Basell Industries, another equity. Then, instead of having a put option on Moderna with a strike price of \$210, we invested our money into Broadcom Inc. stock (AVGO). Finally, we replaced the US Fidelity Bond with the RBC BlueBay High Yield Bond Fund. 
+
+Since our goal for the portfolio was to maximise the Sharpe Ratio, we set out to look for improved Sharpe Ratios, while also calculating returns on a rolling basis to standardise our results. When we did this, we found our Sharpe Ratios for Cheniere and Nvidia to be 4.64 and 3.72 respectively. These are considerably high, so we decided to stick with these two equities.
+
+The Sharpe Ratio for Alibaba(-0.91) was not strong enough to be included in our portfolio once we refocused our portfolio on maximizing Sharpe Ratio, thus we replaced it with Lyondell Basell Industries which had a Sharpe Ratio of 1.20, while also having a beta close to 1. The Sharpe Ratio of the Fidelity US Bond (0.7) was also no strong enough to remain in the portfolio and was replaced with the RBC Blue Bay High Yield Bond Fund (1.39).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llllllllll}
+Asset:        & Ali Baba & T-Bill & Fidelity Bond & LYB  & RHYAX & Moderna & AVGO & NVDA & LNG  \\
+Sharpe Ratio: & -0.9     & 0      & 0.7           & 1.20 & 1.39  & 1.47    & 2.23 & 3.71 & 4.64
+\end{tabular}
+\end{table}
+
+While Moderna had a strong Sharpe Ratio, we chose to remove it from our portfolio. We wrote in our last report that we were hoping to capture some of the residual momentum of the pandemic and for the 2 year anniversary of the beginning of Covid to reflect favorably upon the option price. Once both of those events had passed, the option price of Moderna was higher than when we initially purchased. We thought it would be a convenient time to liquidate the position and move that capital elsewhere. We also knew we were losing a significant portion of our investment into Alibaba and wanted to take the profits from Moderna in order to offset those losses. After selling all 3 securities, our returns on all 3 came out to be 0\% (a net loss of nothing). Despite Alibaba losing much of its value, the Fidelity US bond made nominal gains and we benefited from a dramatic increase in volatility of the Moderna stock which pushed the price of the option up. A table of these returns can be found in appendix section 6.2. We have not included these assets into our portfolio E(r) calculations because their ultimate returns balanced out. 
+
+\section{Portfolio:}
+
+\subsection{Portolio Statistics:}
+We have constructed our portfolio using the following method: We have assigned 5\% to our T-bills and the RHYAX bond fund, 10\% to shares of LYB, 20\% to shares of AVGO and finally 30\% to shares of both NVDA and LNG, since they had the highest Sharpe Ratios. Please see the appendix for a summary of the assets, $\beta_{Portfolio}$ calculations, $E(r_{portfolio})$ calculations, and 5.4 for our average alpha calculations. Those calculations derive the following portfolio statistics:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllllll}
+           & Beta & E(r)    & St. Dev & Sharpe Ratio  \\
+Portfolio: & 2.12 & 69.78\% & 17.21\% & 4.01         
+\end{tabular}
+\end{table}
+
+\noindent
+
+This means that we can expect 95\% of our returns to fall between 35.36\% and 104.2\%. This is a significant increase from our returns from the previous portfolio, and even more importantly, we are now at an extremely positive risk reward ratio with a Sharpe of 4.01. We expect good returns relative to the amount of risk this portfolio is taking on. 
+
+\subsection{Portfolio Performance}
+
+Since the beginning of the project, our portfolio is returned -0.2\%. Of course, no one hopes that their portfolio loses money, but we are not displeased with this because in the same time period the SPY has returned -9.87\%. We cannot compare this to our expected return or to generate a Sharpe ratio that is comparable to our portfolio predicted Sharpe Ratio because all calculations were done on a one year time-frame and this portfolio has been active for roughly a month.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|}
+    \hline
+        Asset & T-bills & LNG & NVDA & AVGO & LYB & RHYAX \\ \hline
+        Return & 0.86\% & 14.91\% & -14.75\% & 1.90\% & -1.40\% & -3.07\% \\ \hline
+        Weighted Return & 0.04\% & 4.47\% & -4.43\% & 0.38\% & -0.14\% & -0.15\% \\ \hline
+        Portfolio Return & -0.20\% & ~ & ~ & ~ & ~ & ~ \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Discussion:}
+We set out to create an efficient portfolio that maximized our Sharpe Ratio. We can measure our success by measuring our portfolio compared to leading mutual fund portfolios.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llllll}
+Mutual Fund:   & Yingtong Investments & ARKK  & APPLX & NUESX & PRCOX \\
+Sharpe Ratio: & 4.01                 & -1.26 & 0.76  & 0.98  & 1.37 
+\end{tabular}
+\end{table}
+
+As we can see, our portfolio has a significantly larger Sharpe Ratio than all other portfolios evaluated here. We have a Sharpe Ratio almost four times as large as the others. It should be noted that this is not necessarily a fair comparison because other portfolios have to consider factors beyond just the Sharpe Ratio, hold larger weights in the market bundle and risk-free assets, and in some cases (like the ARKK fund) have other purposes than creating a portfolio with the strongest Sharpe Ratio. Furthermore, the Sharpe Ratio we have calculated for our portfolio is based on the momentum effect causing abnormally large returns for the assets in our portfolio—which is certainly not guaranteed. Nonetheless, this comparison provides strong evidence that we have succeeded in creating a portfolio that achieves our initial goal.
+
+We do not claim to be better at creating an efficient portfolio than industry experts and do not believe that our Sharpe Ratio is indicative of that. Real world portfolio managers need to be more concerned than we were about volatility and downside risk because people have a propensity to take their money out when funds under-perform and put more money in when funds over-perform—this leaves fund managers in a difficult position because they need to have consistently strong returns or investors will remove their funds and the firm will not have the necessary funds to continue growing. We did not have to worry about these constraints and could be concerned only with the theoretical returns. 
+
+We are satisfied with our portfolio on a couple of accounts. First, we believe that we have achieved a Sharpe Ratio that would be considered successful given that we sought to create an efficient portfolio based on the metric of a strong Sharpe Ratio. The second is that we see, given the empirical data, that our portfolio is successfully outperforming the market which is what is fundamentally needed for any portfolio otherwise investors would simply invest into the market index.  
+
+\section{Appendix:}
+
+\subsection{Figure 1}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Sharpe Ratio vs $\beta$},
+    xlabel={Sharpe Ratio},
+    ylabel={$\beta$},
+    xmin=0, xmax=5,
+    ymin=0, ymax=5,
+    xtick={0, 1, 2, 3, 4, 5},
+    ytick={0, 1, 2, 3, 4, 5},
+    ymajorgrids=true,
+    grid style=dashed,
+]
+\addplot+[
+    only marks,
+    scatter,
+    mark=diamond*,
+    mark size=2.4pt]
+table[] {
+x     y      label
+0     0       a 
+1.19  1.28    a 
+1.38  0.35    a 
+2.23  1.60    a 
+3.71  2.91    a 
+4.64  2.61    a 
+	};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Returns Before Selling Plot}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+        Asset: & BABA & MRNA (price of option) & FXNAX \\ \hline
+        Initial Price & \$121.92 & \$46.15 & \$11.46 \\ \hline
+        Final Price & \$101.03 & \$53.72 & \$11.63 \\ \hline
+        Return Upon Selling & -17.13\% & 16.4\% & 1.46\% \\ \hline
+        Weighted Return & -3.43\% & 3.28\% & .15\% \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection{SPY Standard Deviation Calculation:}
+
+\begin{center}
+    \begin{math}
+        SR = \frac{E[r_{SPY}]-r_f}{\sigma_{SPY}}
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        0.95 = \frac{10.6\%-0.86\%}{\sigma_{SPY}}
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        \sigma_{a} = 10.25\%
+    \end{math}
+\end{center}
+
+\subsection{Sources for Sharpe Ratios:}
+
+ARKK: \url{https://portfolioslab.com/symbol/ARKK}
+
+APPLX: \url{https://www.morningstar.com/funds/xnas/applx/risk}
+
+NUESX: \url{https://finance.yahoo.com/quote/NUESX/risk?p=NUESX}
+
+PRCOX: \url{https://tinyurl.com/2p87sm6m}
+
+\subsection{Portfolio Summary}
+
+\begin{table} [H]
+    \centering
+    \begin{tabular}{lllll}
+                 & E(r)    & St.Dev & Beta  & Weight  \\
+        SPY      & 35.67\% & 12.04\% & 1.00  & 0\%     \\
+        RHYAX    & 9.71\% & 6.38\% &  0.36 & 5\%    \\
+        T-bills  & 0.86\%  & 0.00\% & 0.00  & 5\%    \\
+        LYB      & 52.48\% & 43.17\% & 1.28  & 10\%    \\
+        AVGO     & 57.71\% & 25.55\% & 1.60 & 20\%    \\
+        LNG & 84.49\%  & 18.03\% & 2.61 & 30\%    \\
+        NVDA     & 95.18\% & 25.37\% & 2.91  & 30\%   
+    \end{tabular}
+\end{table}
+
+\subsection{Porfolio $\beta$ Calculation}
+
+\begin{center}
+    \begin{math}
+        \beta_{Portfolio} = (w_{RHYAX}*\beta_{RHYAX}) + (w_{T-bills}*\beta_{T-bills}) + (w_{LYB}*\beta_{LYB}) + (w_{AVGO}*\beta_{AVGO}) + (w_{LNG}*\beta_{LNG}) + (w_{NVDA}*\beta_{NVDA}) 
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        \beta_{Portfolio} = (0.05 * 0.36) + (0.05 * 0.0) + (0.1 * 1.28) + (0.2 * 1.60) + (0.3 * 2.61) + (0.3 * 2.91)
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        \beta_{Portfolio} = 2.12
+    \end{math}
+\end{center}
+
+\subsection{Portfolio E(r) Calculation}
+
+\begin{center}
+    \begin{math}
+        E(r_{Portfolio}) = (w_{RHYAX}*E(r_{RHYAX})) + (w_{T-bills}*E(r_{T-bills})) + (w_{LYB}*E(r_{LYB})) + (w_{AVGO}*E(r_{AVGO})) + (w_{LNG}*E(r_{LNG})) + (w_{NVDA}*E(r_{NVDA})) 
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        E(r_{Portfolio}) = (0.05 * 9.71) + (0.05 * 0.86) + (0.1 * 52.48) + (0.2 * 57.71) + (0.3 * 84.49) + (0.3 * 95.18)
+    \end{math}
+\end{center}
+
+\begin{center}
+    \begin{math}
+        E(r_{Portfolio}) = 71.22\% \footnote{We have reported in our report 69.78\% instead of this value (71.22\%) because we calculated the E(r) 2 ways. First we calculated the E(r) and then took a weighted average (as shown above) which got us 71.22\% and then we looked historically at the portfolio 12 month rolling returns (calculated portfolio 1 year returns on a weekly basis) which got us 69.78\%. We elected to go with the more conservative figure. }
+    \end{math}
+\end{center}
+
+\subsection{Portfolio Sharpe Ratio Calculation}
+\begin{center}
+    \begin{math}
+        Sharpe Ratio_{portfolio} = \frac{E(r_{portfolio}-r_f)}{\sigma_{portfolio}}
+\end{math}
+\end{center}
+
+\begin{center}
+\begin{math}
+        Sharpe Ratio_{portfolio} = \frac{69.78\%-0.86\%)}{17.21\%}
+\end{math}
+\end{center}
+
+\begin{center}
+\begin{math}
+        Sharpe Ratio_{portfolio} = 4.01
+\end{math}
+\end{center}
+
+\end{document}
+
+\end{document}
+
+
+
